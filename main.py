@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, request, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+sockio = SocketIO(app)
 app.secret_key = "qwerrrteytyutyusdfsf"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:2009@localhost/reg_users_portal"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -52,6 +54,16 @@ def Login():
             alert_msg = "Couldnt Find User"
             
     return render_template("login.html", alert=alert_msg)
+
+@app.route("/chat")
+def chatPage():
+    return render_template("chatpage.html", loggeduser=session["user"])
+
+@sockio.on('chatmsg')
+def chat_msg(msg):
+    print("msg : ", msg)
+    emit("chatmsg", (msg, session["user"]), broadcast=True)
+
 
 @app.route("/logout")
 def logout():
