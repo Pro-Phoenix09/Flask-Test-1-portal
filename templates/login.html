@@ -307,6 +307,88 @@
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-50%) scale(1.1);
         }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 1s ease-out 1.0s both;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding-left: 35px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            color: white;
+        }
+
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .checkbox-container:hover .checkmark {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .checkbox-container input:checked~.checkmark {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 4px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-text {
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container:hover .checkbox-text {
+            transform: translateX(2px);
+        }
     </style>
 </head>
 
@@ -333,9 +415,18 @@
                 <button type="button" class="fa-solid fa-eye password-toggle" onclick="togglePassword()"></button>
             </div>
 
+            <div class="checkbox-group">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="staySignedIn" name="stayloggedin">
+                    <span class="checkmark"></span>
+                    <span class="checkbox-text">Stay signed in</span>
+                </label>
+            </div>
+
             {% if alert %}
             <p class="form-group" style="color: red;">{{alert}}</p>
             {% endif %}
+
 
             <button type="submit" class="login-btn ripple">
                 Sign In
@@ -398,6 +489,18 @@
                 toggleIcon.className = 'fa-solid fa-eye password-toggle';
             }
         }
+
+        document.getElementById('staySignedIn').addEventListener('change', function () {
+            const checkmark = this.parentElement.querySelector('.checkmark');
+
+            if (this.checked) {
+                // Add a little bounce effect when checked
+                checkmark.style.transform = 'translateY(-50%) scale(1.1)';
+                setTimeout(() => {
+                    checkmark.style.transform = 'translateY(-50%) scale(1)';
+                }, 150);
+            }
+        });
     </script>
 </body>
 

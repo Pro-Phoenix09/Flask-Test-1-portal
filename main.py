@@ -36,13 +36,19 @@ def Login():
     if request.method == "POST":
         username = request.form["enteredusername"]
         password = request.form["enteredpassword"]
-        
+        stayloggedin = request.form.get("stayloggedin")
+
         users = LoginCreds.query.filter(LoginCreds.name.ilike(username)).first()
         if users:
             print('user exists', users.name)
             passwordcorrect = check_password_hash(users.password, password)
             if passwordcorrect:
-                print('correct password', users.password)
+                print(f"{users.name} logged in")
+
+                if stayloggedin:
+                    session.permanent = True
+                else:
+                    session.permanent = False
                 session["user"] = users.name
 
                 return redirect(url_for("Home"))
