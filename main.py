@@ -63,6 +63,9 @@ def Login():
 
 @app.route("/chat")
 def chatPage():
+    if "user" not in session:
+        return redirect(url_for("Home"))
+    
     return render_template("chatpage.html", loggeduser=session["user"])
 
 @sockio.on('chatmsg')
